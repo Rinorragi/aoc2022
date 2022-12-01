@@ -25,8 +25,12 @@ let populateElf (stringInput : string) =
         CalorySum = List.sum caloriesList
     }
 
-let inputToElves (filePath : string) = 
+// Read the file
+  
+// Recognize elves by splitting at double LF
+let inputToElvesSorted (filePath : string) = 
     System.IO.File.ReadAllText filePath
+    // Replace CRLF to only LF (copy+paste and input in different format)
     |> fun s -> s.Replace("\r\n", nl)
     |> fun s -> s.Split(nl+nl, StringSplitOptions.RemoveEmptyEntries)
     |> Array.map populateElf
@@ -38,7 +42,7 @@ let top3ElvesCalorySum (elves : Elf array) =
     |> Array.sumBy (fun e -> e.CalorySum)
 
 // Read example input
-let exampleElfs = inputToElves "./input/day01_example.txt" 
+let exampleElfs = inputToElvesSorted "./input/day01_example.txt" 
 // Verify example
 printfn "Example should be 24000 and is %d" exampleElfs[0].CalorySum
 // Verify example for answer2
@@ -46,7 +50,7 @@ let answer2_example = top3ElvesCalorySum exampleElfs
 printfn "Example should be 45000 and is %d" answer2_example
 
 // Read real input
-let elves = inputToElves "./input/day01.txt" 
+let elves = inputToElvesSorted "./input/day01.txt" 
 printfn "Answer1 is: %d" elves[0].CalorySum
 top3ElvesCalorySum elves |> printfn "Answer2 is: %d"
 
