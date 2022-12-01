@@ -25,13 +25,11 @@ let populateElf (stringInput : string) =
         CalorySum = List.sum caloriesList
     }
 
-// Read the file
-  
-// Recognize elves by splitting at double LF
 let inputToElvesSorted (filePath : string) = 
     System.IO.File.ReadAllText filePath
     // Replace CRLF to only LF (copy+paste and input in different format)
     |> fun s -> s.Replace("\r\n", nl)
+    // Recognize elves by splitting at double LF
     |> fun s -> s.Split(nl+nl, StringSplitOptions.RemoveEmptyEntries)
     |> Array.map populateElf
     |> Array.sortByDescending (fun elf -> elf.CalorySum)
