@@ -51,5 +51,3 @@ printfn "Example should be 45000 and is %d" answer2_example
 let elves = inputToElvesSorted "./input/day01.txt" 
 printfn "Answer1 is: %d" elves[0].CalorySum
 top3ElvesCalorySum elves |> printfn "Answer2 is: %d"
-
-
