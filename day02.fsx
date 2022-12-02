@@ -1,11 +1,5 @@
 // Macro to get running time
 #time
-
-
-
-
-
-
 open System
 
 let nl = "\n"
