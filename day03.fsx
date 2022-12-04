@@ -2,7 +2,6 @@
 #time
 open System
 
-exception ValueProblem of string
 let nl = "\n"
 
 let charToIntValue (c : char) =
