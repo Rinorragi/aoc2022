@@ -45,15 +45,13 @@ let crateMover appendFunction =
             crateState
             // Move from array to another
             |> List.mapi (fun i l ->
-                if (i + 1 = crateFrom) then
-                    // Remove crates from crateArray
-                    l |> List.skip amount
-                elif (i + 1 = crateTo) then
-                    // Take crates dictated by appendFunction function parameter
-                    List.append (crateState.[crateFrom - 1] |> List.take amount |> appendFunction) l
-                else
-                    // Don't change this crate array
-                    l))
+                match i+1 with
+                // Remove crates from crateArray
+                | num when num = crateFrom -> l |> List.skip amount
+                // Take crates dictated by appendFunction function parameter
+                | num when num = crateTo -> List.append (crateState.[crateFrom - 1] |> List.take amount |> appendFunction) l
+                // Don't change this crate array
+                | _ -> l))
         crates
     |> List.map List.head
     |> String.Concat
