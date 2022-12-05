@@ -5,17 +5,16 @@ open System
 let nl = "\n"
 
 let createCrates (crateString: string) =
-
-        crateString.Split(nl, StringSplitOptions.RemoveEmptyEntries)
-        |> Array.map (fun s -> s.ToCharArray())
-        // Remove nonsense and take only letters by chunking and taking the 1-index things
-        |> Array.map (Array.chunkBySize (4))
-        |> Array.map (fun arr -> arr |> Array.map (fun chars -> chars.[1]))
-        // Pivot columns to rows
-        |> Seq.transpose
-        |> List.ofSeq
-        // Remove the empty chars and numbers to return only the piles
-        |> List.map (fun l -> l |> Seq.filter (fun c -> Char.IsLetter(c)) |> List.ofSeq)
+    crateString.Split(nl, StringSplitOptions.RemoveEmptyEntries)
+    |> Array.map (fun s -> s.ToCharArray())
+    // Remove nonsense and take only letters by chunking and taking the 1-index things
+    |> Array.map (Array.chunkBySize (4))
+    |> Array.map (fun arr -> arr |> Array.map (fun chars -> chars.[1]))
+    // Pivot columns to rows
+    |> Seq.transpose
+    |> List.ofSeq
+    // Remove the empty chars and numbers to return only the piles
+    |> List.map (fun l -> l |> Seq.filter (fun c -> Char.IsLetter(c)) |> List.ofSeq)
 
 let createInstructions (instructionString: string) =
     instructionString.Split(nl, StringSplitOptions.RemoveEmptyEntries)
