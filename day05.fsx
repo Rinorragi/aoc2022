@@ -61,4 +61,4 @@ let crateMover appendFunction =
 // CrateMover 9000 that takes units one by one and thus reverses the taking order
 crateMover (List.rev) |> printfn "Answer1: %s"
 // CrateMover 9001 that takes units as they are
-crateMover (List.map (fun l -> l)) |> printfn "Answer2: %s"
+crateMover (fun l -> l) |> printfn "Answer2: %s"
