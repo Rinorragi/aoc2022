@@ -5,22 +5,17 @@ open System
 let nl = "\n"
 
 let createCrates (crateString: string) =
-    let charNumberArrays =
+
         crateString.Split(nl, StringSplitOptions.RemoveEmptyEntries)
         |> Array.map (fun s -> s.ToCharArray())
+        // Remove nonsense and take only letters by chunking and taking the 1-index things
         |> Array.map (Array.chunkBySize (4))
         |> Array.map (fun arr -> arr |> Array.map (fun chars -> chars.[1]))
-    // Flip rows to columns
-    let flippedArray =
-        Array2D.init (charNumberArrays.[0].Length) (charNumberArrays.Length) (fun r c -> charNumberArrays.[c].[r])
-    // Convert array2d to lists
-    let lists =
-        [ let height = flippedArray.GetLength 0
-
-          for row in 0 .. height - 1 do
-              yield flippedArray.[row, *] |> List.ofArray ]
-    // Remove the empty chars and numbers to return only the piles
-    lists |> List.map (fun l -> l |> List.filter (fun c -> Char.IsLetter(c)))
+        // Pivot columns to rows
+        |> Seq.transpose
+        |> List.ofSeq
+        // Remove the empty chars and numbers to return only the piles
+        |> List.map (fun l -> l |> Seq.filter (fun c -> Char.IsLetter(c)) |> List.ofSeq)
 
 let createInstructions (instructionString: string) =
     instructionString.Split(nl, StringSplitOptions.RemoveEmptyEntries)
@@ -59,4 +54,4 @@ let crateMover appendFunction =
 // CrateMover 9000 that takes units one by one and thus reverses the taking order
 crateMover (List.rev) |> printfn "Answer1: %s"
 // CrateMover 9001 that takes units as they are
-crateMover (fun l -> l) |> printfn "Answer2: %s"
+crateMover id |> printfn "Answer2: %s"
