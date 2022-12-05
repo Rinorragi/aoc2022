@@ -10,21 +10,16 @@ let createCrates (crateString: string) =
         |> Array.map (fun s -> s.ToCharArray())
         |> Array.map (Array.chunkBySize (4))
         |> Array.map (fun arr -> arr |> Array.map (fun chars -> chars.[1]))
-    // Remove the number row from the end
-    let charArrays = charNumberArrays |> Array.take (charNumberArrays.Length - 1)
-    // Init array as Array2D
-    let array2d =
-        Array2D.init charArrays.Length charArrays.[0].Length (fun r c -> charArrays.[r].[c])
     // Flip rows to columns
     let flippedArray =
-        Array2D.init (array2d |> Array2D.length2) (array2d |> Array2D.length1) (fun r c -> array2d.[c, r])
+        Array2D.init (charNumberArrays.[0].Length) (charNumberArrays.Length) (fun r c -> charNumberArrays.[c].[r])
     // Convert array2d to lists
     let lists =
         [ let height = flippedArray.GetLength 0
 
           for row in 0 .. height - 1 do
               yield flippedArray.[row, *] |> List.ofArray ]
-    // Remove the empty chars to return only the piles
+    // Remove the empty chars and numbers to return only the piles
     lists |> List.map (fun l -> l |> List.filter (fun c -> Char.IsLetter(c)))
 
 let createInstructions (instructionString: string) =
