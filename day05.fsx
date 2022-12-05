@@ -54,7 +54,7 @@ let crateMover appendFunction =
                     // Remove crates from crateArray
                     l |> List.skip amount
                 elif (i + 1 = crateTo) then
-                    // Take crates in reverse order and put them to new array
+                    // Take crates dictated by appendFunction function parameter
                     List.append (crateState.[crateFrom - 1] |> List.take amount |> appendFunction) l
                 else
                     // Don't change this crate array
