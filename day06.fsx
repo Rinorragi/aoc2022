@@ -1,7 +1,5 @@
 #time
 
-open System
-
 let startOfPacketIndex (datastream : string) (startMarkerLength : int) =
     datastream 
     |> List.ofSeq
