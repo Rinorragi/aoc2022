@@ -2,9 +2,8 @@
 
 let startOfPacketIndex (datastream : string) (startMarkerLength : int) =
     datastream 
-    |> List.ofSeq
-    |> List.windowed startMarkerLength
-    |> List.findIndex (List.distinct >> List.length >> (=) startMarkerLength) 
+    |> Seq.windowed startMarkerLength
+    |> Seq.findIndex (Seq.distinct >> Seq.length >> (=) startMarkerLength) 
     |> (+) startMarkerLength
     
 let datastreamInput = System.IO.File.ReadAllText "./input/day06.txt"
