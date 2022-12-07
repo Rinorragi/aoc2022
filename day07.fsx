@@ -123,4 +123,4 @@ dirTotals
 |> List.filter (fun f -> (snd f) > minimumToDelete)
 |> List.sortBy (snd)
 |> List.head
-|> printfn "Answer1: %A"
+|> printfn "Answer2: %A"
