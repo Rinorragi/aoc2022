@@ -75,17 +75,15 @@ let tailPosition rope headMovement =
                 x = fst headPos
                 y = snd headPos
             } 
-            let referenceRope = List.append [headNewCoordinate] (oldRope |> List.skip 1)
-            let newTail =
+            let newRope =
                 oldRope
                 |> List.skip 1
-                |> List.fold (fun (refRope : Coordinate list, newRope) oldTail -> 
+                |> List.fold (fun (newRope) oldTail -> 
                     let index = newRope |> List.length
-                    let nextTail = moveTail refRope[index] refRope[index + 1]
-                    (refRope, newRope |> List.append [nextTail])
-                ) (referenceRope, [])
-                |> snd
-            let newRope = List.append [headNewCoordinate] newTail
+                    let nextTail = moveTail newRope[index - 1] oldTail
+                    List.append newRope [nextTail]
+                ) ([headNewCoordinate])
+            //printfn "%A" newRope
             List.append innerPath [newRope]
         ) ropePath
     ) rope
@@ -102,5 +100,5 @@ let startList amount =
     List.init amount (fun _ -> startPos)
 
 [startList 2] |> ropeTailPositionAmount |> printfn "Answer1: %d" 
-[startList 9] |> ropeTailPositionAmount |> printfn "Answer2 %d" 
+[startList 10] |> ropeTailPositionAmount |> printfn "Answer2 %d" 
 
