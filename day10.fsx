@@ -23,19 +23,14 @@ let signalAtCycle (cycles : int list) (cycle : int) = cycles[cycle - 1] * cycle
 |> List.sum
 |> printfn "Answer1: %d"
 
-let chunkCyclesForCRT skip = cycles |> List.skip skip |> List.take 40
-
 printfn "Answer2: "
 [0;40;80;120;160;200]
-|> List.map chunkCyclesForCRT
-|> List.map (fun chunk -> 
-    chunk 
+|> List.map (fun skip -> cycles |> List.skip skip |> List.take 40 )
+|> List.map (fun row -> 
+    row 
     |> List.mapi (fun pos middlePixelInSprite -> 
         match pos = middlePixelInSprite || pos - 1 = middlePixelInSprite || pos + 1 = middlePixelInSprite with 
-        | true -> '#'
-        | false -> '.'))
-|> List.map (fun chars ->
-    let sb = System.Text.StringBuilder(chars.Length)
-    chars |> List.iter (sb.Append >> ignore)
-    sb.ToString())
+        | true -> "#"
+        | false -> "."))
+|> List.map (String.concat "")
 |> printfn "%A"
