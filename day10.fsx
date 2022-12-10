@@ -16,8 +16,6 @@ let cycles =
     ) ([1], "noop", 0)
     |> (fun (results, _, _) -> (results))
 
-let signalAtCycle (cycles : int list) (cycle : int) = cycles[cycle - 1] * cycle
-
 [20;60;100;140;180;220]
 |> List.map (fun cycle -> cycles[cycle - 1] * cycle)
 |> List.sum
