@@ -42,7 +42,7 @@ let monkeyInput =
     |> List.ofArray
 
 
-let worryInspection monkeyInTurn = 
+let worryInspection worryDecreaser monkeyInTurn = 
     monkeyInTurn.items 
     |> List.map (fun item ->
         let worryIncrease = 
@@ -50,7 +50,7 @@ let worryInspection monkeyInTurn =
             | MonkeyOperation.Exp -> item * item
             | MonkeyOperation.Sum -> item + monkeyInTurn.opValue
             | MonkeyOperation.Multiple -> item * monkeyInTurn.opValue
-        let boredom = worryIncrease / 3L
+        let (boredom: int64) = worryDecreaser worryIncrease
         let monkeyId = 
             match boredom % monkeyInTurn.test = 0 with 
             | true -> monkeyInTurn.testTrueMonkeyId
@@ -77,24 +77,33 @@ let throwItems monkeyInTurn worries monkeyToThrowAt =
         inspectionAmount = snd thisMonkeyItemsAndInspection
     }
 
-let monkeyGameOutput =
-    [1..20] // rounds
+let monkeyGameOutput worryDecreaser rounds =
+    [1..rounds] 
     |> List.fold(fun (monkeyState: Monkey list) round ->
         let updatedState = 
             monkeyState
             |> List.fold (fun (innerMonkeyState: Monkey list)  monkeyId ->
                 let monkeyInTurn = innerMonkeyState[monkeyId.id]
-                let monkeyWorries = worryInspection monkeyInTurn 
+                let monkeyWorries = worryInspection worryDecreaser monkeyInTurn 
                 innerMonkeyState 
                 |> List.map (throwItems monkeyInTurn monkeyWorries)
             ) monkeyState
-        updatedState |> List.map (fun f -> f.items) |> printfn "Round %d: %A" round
+        //updatedState |> List.map (fun f -> f.items) |> printfn "Round %d: %A" round
         updatedState
     ) monkeyInput
 
-monkeyGameOutput
+monkeyGameOutput (fun f -> f / 3L) 20
 |> List.map (fun monkey -> monkey.inspectionAmount)
 |> List.sortDescending
 |> List.take 2
 |> List.fold (fun state i -> state * i) 1L
 |> printfn "Answer1: %d" 
+
+let modulus = monkeyInput |> List.map (fun monkey -> monkey.test) |> List.fold (fun modState testValue -> testValue * modState) 1L
+
+monkeyGameOutput (fun f -> f % modulus) 10000
+|> List.map (fun monkey -> monkey.inspectionAmount)
+|> List.sortDescending
+|> List.take 2
+|> List.fold (fun state i -> state * i) 1L
+|> printfn "Answer2: %d" 
