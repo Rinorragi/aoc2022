@@ -80,16 +80,13 @@ let throwItems monkeyInTurn worries monkeyToThrowAt =
 let monkeyGameOutput worryDecreaser rounds =
     [1..rounds] 
     |> List.fold(fun (monkeyState: Monkey list) round ->
-        let updatedState = 
-            monkeyState
-            |> List.fold (fun (innerMonkeyState: Monkey list)  monkeyId ->
-                let monkeyInTurn = innerMonkeyState[monkeyId.id]
-                let monkeyWorries = worryInspection worryDecreaser monkeyInTurn 
-                innerMonkeyState 
-                |> List.map (throwItems monkeyInTurn monkeyWorries)
-            ) monkeyState
-        //updatedState |> List.map (fun f -> f.items) |> printfn "Round %d: %A" round
-        updatedState
+        monkeyState
+        |> List.fold (fun (innerMonkeyState: Monkey list)  monkeyId ->
+            let monkeyInTurn = innerMonkeyState[monkeyId.id]
+            let monkeyWorries = worryInspection worryDecreaser monkeyInTurn 
+            innerMonkeyState 
+            |> List.map (throwItems monkeyInTurn monkeyWorries)
+        ) monkeyState
     ) monkeyInput
 
 monkeyGameOutput (fun f -> f / 3L) 20
