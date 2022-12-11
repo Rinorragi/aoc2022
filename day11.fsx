@@ -100,7 +100,7 @@ let popResult gameType gameOutput =
 monkeyGame (fun f -> f / 3L) 20
 |> popResult 1
 
-let modulus = monkeyInput |> List.map (fun monkey -> monkey.test) |> List.fold (fun modState testValue -> testValue * modState) 1L
+let divisibilityProduct = monkeyInput |> List.map (fun monkey -> monkey.test) |> List.fold (fun modState testValue -> testValue * modState) 1L
 
-monkeyGame (fun f -> f % modulus) 10000
+monkeyGame (fun f -> f % divisibilityProduct) 10000
 |> popResult 2
