@@ -77,7 +77,7 @@ let throwItems monkeyInTurn worries monkeyToThrowAt =
         inspectionAmount = snd thisMonkeyItemsAndInspection
     }
 
-let monkeyGameOutput worryDecreaser rounds =
+let monkeyGame worryDecreaser rounds =
     [1..rounds] 
     |> List.fold(fun (monkeyState: Monkey list) round ->
         monkeyState
@@ -89,18 +89,18 @@ let monkeyGameOutput worryDecreaser rounds =
         ) monkeyState
     ) monkeyInput
 
-monkeyGameOutput (fun f -> f / 3L) 20
-|> List.map (fun monkey -> monkey.inspectionAmount)
-|> List.sortDescending
-|> List.take 2
-|> List.fold (fun state i -> state * i) 1L
-|> printfn "Answer1: %d" 
+let popResult gameType gameOutput = 
+    gameOutput
+    |> List.map (fun monkey -> monkey.inspectionAmount)
+    |> List.sortDescending
+    |> List.take 2
+    |> List.fold (fun state i -> state * i) 1L
+    |> printfn "Answer%d: %d" gameType
+
+monkeyGame (fun f -> f / 3L) 20
+|> popResult 1
 
 let modulus = monkeyInput |> List.map (fun monkey -> monkey.test) |> List.fold (fun modState testValue -> testValue * modState) 1L
 
-monkeyGameOutput (fun f -> f % modulus) 10000
-|> List.map (fun monkey -> monkey.inspectionAmount)
-|> List.sortDescending
-|> List.take 2
-|> List.fold (fun state i -> state * i) 1L
-|> printfn "Answer2: %d" 
+monkeyGame (fun f -> f % modulus) 10000
+|> popResult 2
