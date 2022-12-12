@@ -32,18 +32,15 @@ let inline Dijkstra N G y =
                     |Some g,Some g',Some wg when g+wg<g'->Some {toN=n'.toN;cost=Some(g+wg);fromN=n.toN}
                     |_ ->Some n'))((n.fromN,n.toN)::f)
   let r = fN (N|>List.map(fun n->{toN=n;cost=(Map.tryFind(y,n)G);fromN=y})) []
-  (fun n->let rec fN z l=match List.tryFind(fun (_,g)->g=z) r with
-                         |Some(n',g') when y=n'->Some(n'::g'::l)
-                         |Some(n',g') ->fN n' (g'::l)
-                         |_ ->None
-          fN n [])
+  (fun n->
+    let rec fN z l=
+        match List.tryFind(fun (_,g)->g=z) r with
+        |Some(n',g') when y=n'->Some(n'::g'::l)
+        |Some(n',g') ->fN n' (g'::l)
+        |_ ->None
+    fN n [])
+// End of copy paste
 
-
-//type Node= |A|B|C|D|E|F
-//let G=Map[((A,B),7);((A,C),9);((A,F),14);((B,C),10);((B,D),15);((C,D),11);((C,F),2);((D,E),6);((E,F),9)]
-
-//printfn "%A" (paths E)
-//printfn "%A" (paths F)
 
 type Coordinate = {
     id: string
@@ -108,4 +105,15 @@ let goal = mazePoints |> List.find (fun f -> f.best = true)
  
 let paths=Dijkstra mazePoints mazeGraph start
 let pathFound = (paths goal)
-printfn "%d" (pathFound.Value.Length - 1)
+printfn "Answer1: %d" (pathFound.Value.Length - 1)
+
+mazeGraph 
+|> Map.toList
+|> List.filter (fun ((c1,c2),value) -> c1.height = 0 && c2.height = 1) // shortest a will have b next to it for sure
+|> List.map (fun ((c1,_),_) -> c1)
+|> List.distinct
+|> List.map (fun startCandidate -> 
+    let p2Paths = Dijkstra mazePoints mazeGraph startCandidate
+    (p2Paths goal).Value)
+|> List.minBy List.length
+|> (fun shortestPath -> printfn "Answer2: %d" (shortestPath.Length - 1))
