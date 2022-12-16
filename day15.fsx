@@ -27,15 +27,15 @@ let sensorInput =
     |> List.ofArray
 
 let maxX = sensorInput |> List.map (fun f -> [f.x; f.beaconX]) |> List.concat |> List.max |> (fun f-> f*2)
-let rowToTest = 2000000
-let beaconsAtTestRow = 
+
+let beaconsAtTestRow rowToTest = 
     sensorInput 
     |> List.filter (fun f -> f.beaconY = rowToTest && f.beaconX < maxX && f.beaconX > -maxX) 
     |> List.map (fun f -> (f.beaconX,f.beaconY))
     |> List.distinct
     |> List.length
 
-let impossibleBeacons = 
+let impossibleBeacons rowToTest = 
     [-maxX..maxX]
     |> List.map (fun x -> 
         sensorInput 
@@ -45,4 +45,25 @@ let impossibleBeacons =
         |> List.exists id)
     |> List.filter id
     |> List.length
-printfn "%d" (impossibleBeacons - beaconsAtTestRow)
+
+let rowToTest = 2000000
+printfn "Answer1: %d" ((impossibleBeacons rowToTest) - (beaconsAtTestRow rowToTest))
+
+//let xyMax = 20
+
+let distressBeacon size =
+    [0..size]
+    |> List.map (fun y ->
+        [0..size]
+        |> List.map (fun x -> 
+            let isMatch = sensorInput|> List.forall (fun sensor -> manhattanDistance (sensor.x, sensor.y) (x,y) > sensor.closestBeaconManhattan)
+            match isMatch with 
+            | true -> Some((x,y))
+            | false -> None)
+        |> List.filter Option.isSome)
+    |> List.concat
+
+//let blaa = distressBeacon xyMax
+//blaa[0].Value
+//|> (fun (x,y) -> (x * 4000000) + y)
+//|> printf "Answer2: %d"
